@@ -190,8 +190,9 @@
                     }
 
                     this.logger.LogInformation("About to execute the stored proc...");
-                    
-                    _ = (context as ProductDbContext)?.Products.FromSql("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", $"{updatedBy}" }).ToList();
+
+                    _ = await ((context as ProductDbContext)?.Products.FromSqlRaw(
+                                   $"EXEC dbo.SpUpdateAllProducts 1,2,3, {updatedBy}") ?? throw new InvalidOperationException()).ToListAsync();
                 });
 
             return this.Accepted();

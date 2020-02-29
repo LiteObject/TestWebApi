@@ -62,7 +62,7 @@
 
             using (var db = new ProductDbContext())
             {
-                List<Product> p  = db.Products.FromSql("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", "TestWebApiLoad" }).ToList();
+                List<Product> p  = db.Products.FromSqlRaw($"EXEC dbo.SpUpdateAllProducts {"1,2,3"}, TestWebApiLoad").ToList();
                 Console.WriteLine($"Count: {p.Count()}");
             }
 

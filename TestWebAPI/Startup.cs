@@ -16,7 +16,6 @@
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Internal;
@@ -103,8 +102,8 @@
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .AddMvcOptions(
                     options =>
                     {
@@ -224,7 +223,7 @@
             // http://localhost:5000/swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = $"{this.ApplicationName}", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = $"{this.ApplicationName}", Version = "v1" });
             });
         }
         /// <summary>

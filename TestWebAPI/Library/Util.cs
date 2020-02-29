@@ -5,6 +5,8 @@
 
     using Newtonsoft.Json;
 
+    using TestWebApi.Domain.Enums;
+
     /// <summary>
     /// The utility class. Test.
     /// </summary>
@@ -94,6 +96,35 @@
                 result = default(T);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// The get random state.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="States"/>.
+        /// </returns>
+        public static States GetRandomState()
+        {
+            Array values = Enum.GetValues(typeof(States));
+            Random random = new Random();
+            States randomState = (States)values.GetValue(random.Next(values.Length));
+            return randomState;
+        }
+
+        /// <summary>
+        /// The random ENUM value.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The ENUM type.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="T"/>.
+        /// </returns>
+        public static T RandomEnumValue<T>()
+        {
+            var v = Enum.GetValues(typeof(T));
+            return (T)v.GetValue(new Random().Next(v.Length));
         }
     }
 }

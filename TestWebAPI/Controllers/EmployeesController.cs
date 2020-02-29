@@ -48,9 +48,9 @@
         /// this mechanism can be used to obtain a small performance gain by bypassing the computation of the hash and the cache lookup, allowing
         /// the application to use an already compiled query through the invocation of a delegate.
         /// </summary>
-        private readonly Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
+        /*private readonly Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
             EF.CompileAsyncQuery((EmployeeDataContext context, string nameLike) =>
-                context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));
+                context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));*/
 
         /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
 

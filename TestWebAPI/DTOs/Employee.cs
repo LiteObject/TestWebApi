@@ -1,5 +1,6 @@
 ﻿namespace TestWebAPI.DTOs
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
 
     using TestWebApi.Domain.Entities;
