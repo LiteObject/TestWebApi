@@ -53,17 +53,17 @@
             else
             {
                 addresses = await this.employeeRepository.FindAsync(
-                               a => a.LocationName.Contains(searchKey) 
+                               a => a.LocationName.Contains(searchKey)
                                     || a.City.Contains(searchKey)
                                     || a.StreetName.Contains(searchKey));
             }
 
-            if (addresses != null && addresses.Any())
+            if (addresses == null || addresses.Count == 0)
             {
-                return this.Ok(addresses);
+                return this.NotFound();
             }
 
-            return this.NotFound();
+            return this.Ok(addresses);
         }
 
         /// <summary>

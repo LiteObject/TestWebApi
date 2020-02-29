@@ -93,7 +93,7 @@
             }
             catch (JsonSerializationException ex)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
         }

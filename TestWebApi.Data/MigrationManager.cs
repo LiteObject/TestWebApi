@@ -26,18 +26,16 @@
         {
             using (IServiceScope scope = webHost.Services.CreateScope())
             {
-                using (EmployeeDataContext context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
+                using EmployeeDataContext context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
+                try
                 {
-                    try
-                    {
-                        // context.Database.EnsureDeleted();
-                        context.Database.Migrate();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        throw;
-                    }
+                    // context.Database.EnsureDeleted();
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
                 }
             }
 

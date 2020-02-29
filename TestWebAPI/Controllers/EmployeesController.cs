@@ -327,11 +327,9 @@
             using (System.Data.Common.DbConnection connection = this.context.Database.GetDbConnection())
             {
                 await connection.OpenAsync();
-                using (System.Data.Common.DbCommand command = connection.CreateCommand())
-                {
-                    command.CommandText = "SELECT GETDATE()";
-                    result = (string)await command.ExecuteScalarAsync();
-                }
+                using System.Data.Common.DbCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT GETDATE()";
+                result = (string)await command.ExecuteScalarAsync();
             }
 
             return this.Ok(result);
@@ -349,8 +347,8 @@
         [HttpGet("exception")]
         public IActionResult GetException()
         {
-            throw new Exception("Test Exception. Please ignore.");
-            return this.Ok();
+            // return this.Ok();
+            throw new Exception("Test Exception. Please ignore.");           
         }
 
         /// <summary>

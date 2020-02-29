@@ -17,7 +17,7 @@
         /// <param name="args">
         /// The args.
         /// </param>
-        private static void Main(string[] args)
+        private static void Main()
         {
             using (var context = new DbFirstContext())
             {

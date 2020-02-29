@@ -63,7 +63,7 @@
         /// <param name="hostingEnvironment">
         /// The hosting Environment.
         /// </param>
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IWebHostEnvironment hostingEnvironment)
         {
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
@@ -88,9 +88,9 @@
         public ILoggerFactory LoggerFactory { get; set; }
 
         /// <summary>
-        /// Gets or sets the hosting environment.
+        /// Gets or sets the web hosting environment.
         /// </summary>
-        public IHostingEnvironment HostingEnvironment { get; set; }
+        public IWebHostEnvironment HostingEnvironment { get; set; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -169,9 +169,10 @@
                     optionsBuilder.EnableSensitiveDataLogging();
                     optionsBuilder.UseLoggerFactory(this.LoggerFactory);
 
-                    var context = new EmployeeDataContext(optionsBuilder.Options);
-
-                    context.OnSaveEventHandlers = EntityEventHandler.OnSave;
+                    var context = new EmployeeDataContext(optionsBuilder.Options)
+                    {
+                        OnSaveEventHandlers = EntityEventHandler.OnSave
+                    };
 
                     context.OnSaveEventHandlers += (entries) =>
                     {
@@ -195,8 +196,8 @@
                     var config = new Configuration();
 
                     StringValues? i = provider.GetService<IHttpContextAccessor>()?.HttpContext?.Request?.Headers["id"];
-
-                    if (i.HasValue && i.Any() && int.TryParse(i.Value.Single(), out int id))
+                    
+                    if (i.HasValue && i.Value.Count > 1 && int.TryParse(i.Value.Single(), out int id))
                     {
                         config.Id = id;
                     }
@@ -241,7 +242,7 @@
         /// <param name="mapper">
         /// The auto mapper object.
         /// </param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
         {
             // Error handling middleware should be the first in the pipeline
             app.UseExceptionHandler(
@@ -314,7 +315,8 @@
             // app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            // app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
