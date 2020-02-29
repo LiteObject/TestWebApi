@@ -95,12 +95,10 @@
         {
             this.log.LogInformation("Timed Background Service is working.");
 
-            using (IServiceScope scope = this.provider.CreateScope())
-            {
-                ProductDbContext context = scope.ServiceProvider.GetService<ProductDbContext>();
-                var products = context.Products.FromSqlRaw("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", "TestWebApiLoad" }).ToList();
-                this.log.LogInformation($"Product Count: {products.Count()}");
-            }
+            using IServiceScope scope = this.provider.CreateScope();
+            ProductDbContext context = scope.ServiceProvider.GetService<ProductDbContext>();
+            var products = context.Products.FromSqlRaw("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", "TestWebApiLoad" }).ToList();
+            this.log.LogInformation($"Product Count: {products.Count()}");
         }
     }
 }

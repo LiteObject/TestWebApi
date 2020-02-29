@@ -130,16 +130,14 @@
                         await task;
                     }*/
 
-                    using (IServiceScope scope = this.services.CreateScope())
-                    {
-                        ProductDbContext context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-                        await workItem(this.shutdown.Token, context);
-                        
-                        /*TestWebApi.Domain.Entities.Product p = context.Products.FirstOrDefault();
-                        this.logger.LogInformation($"UpdatedBy: {p?.UpdatedBy}"); */
+                    using IServiceScope scope = this.services.CreateScope();
+                    ProductDbContext context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+                    await workItem(this.shutdown.Token, context);
 
-                        this.logger.LogInformation("Completed work-item.");
-                    }
+                    /*TestWebApi.Domain.Entities.Product p = context.Products.FirstOrDefault();
+                    this.logger.LogInformation($"UpdatedBy: {p?.UpdatedBy}"); */
+
+                    this.logger.LogInformation("Completed work-item.");
                 }
                 catch (Exception ex)
                 {

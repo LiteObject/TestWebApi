@@ -17,12 +17,12 @@
         /// <summary>
         /// The host.
         /// </summary>
-        private string host;
+        private readonly string host;
 
         /// <summary>
         /// The timeout.
         /// </summary>
-        private int timeout;
+        private readonly int timeout;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PingHealthCheck"/> class.
@@ -55,22 +55,20 @@
         {
             try
             {
-                using (var ping = new Ping())
+                using var ping = new Ping();
+                var reply = await ping.SendPingAsync(this.host, this.timeout);
+
+                if (reply.Status != IPStatus.Success)
                 {
-                    var reply = await ping.SendPingAsync(this.host, this.timeout);
-
-                    if (reply.Status != IPStatus.Success)
-                    {
-                        return HealthCheckResult.Unhealthy();
-                    }
-
-                    if (reply.RoundtripTime > this.timeout)
-                    {
-                        return HealthCheckResult.Degraded();
-                    }
-
-                    return HealthCheckResult.Healthy();
+                    return HealthCheckResult.Unhealthy();
                 }
+
+                if (reply.RoundtripTime > this.timeout)
+                {
+                    return HealthCheckResult.Degraded();
+                }
+
+                return HealthCheckResult.Healthy();
             }
             catch
             {

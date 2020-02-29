@@ -17,19 +17,13 @@
     public class ValuesController : ControllerBase
     {
         /// <summary>
-        /// The configuration.
-        /// </summary>
-        private readonly Configuration configuration;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ValuesController"/> class.
         /// </summary>
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        public ValuesController(Configuration configuration)
+        public ValuesController()
         {
-            this.configuration = configuration;
         }
 
         /// <summary>

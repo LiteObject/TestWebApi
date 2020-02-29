@@ -76,7 +76,7 @@
         {
             if (obj is null)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
 
@@ -91,7 +91,7 @@
                 result = JsonConvert.DeserializeObject<T>(obj, settings);
                 return true;
             }
-            catch (JsonSerializationException ex)
+            catch (JsonSerializationException)
             {
                 result = default;
                 return false;
