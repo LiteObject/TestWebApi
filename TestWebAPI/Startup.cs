@@ -121,12 +121,13 @@
                 builder =>
                 {
                     builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Trace);
-                    builder.AddNLog(
+                    /*builder.AddNLog(
                         new NLogProviderOptions
                             {
                                 CaptureMessageTemplates = true,
-                                CaptureMessageProperties = true
-                            });
+                                CaptureMessageProperties = true,
+                                IncludeScopes = true
+                            });*/
                 });
 
             // services.AddSingleton<IHostedService, ProductUpdateHostedService>();
@@ -263,12 +264,12 @@
                                     if (exceptionHandlerFeature != null)
                                     {
                                         ILogger logger = loggerFactory.CreateLogger("Global Exception Logger");
-                                        logger.LogError(exceptionHandlerFeature.Error.ToString());
+                                        logger.LogError(exceptionHandlerFeature.Error.Message, exceptionHandlerFeature.Error);
                                     }
 
                                     // Response to client
                                     context.Response.StatusCode = 500;
-                                    await context.Response.WriteAsync("Encountered an unexpected fault. Try again later.");
+                                    await context.Response.WriteAsync("The application encountered an unexpected fault. Try again later.");
                                 });
                     });
 

@@ -40,7 +40,7 @@
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             this.logger.LogInformation($"Action '{context.ActionDescriptor.DisplayName}' executing.");
-
+            
             // ToDo: Log request object.
             Microsoft.AspNetCore.Http.HttpRequest request = context.HttpContext.Request;
         }

@@ -52,6 +52,7 @@
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            this.logger.LogInformation($"{nameof(Get)} method has been invoked.");
             return new[] { "value1", "value2" };
         }
 
@@ -65,8 +66,9 @@
         /// The <see cref="ActionResult"/>.
         /// </returns>
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<string> GetById(int id)
         {
+            this.logger.LogInformation($"{nameof(GetById)} method has been invoked with param {nameof(id)}: {id}.");
             return "value";
         }
 

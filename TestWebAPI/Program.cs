@@ -5,6 +5,8 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
 
+    using NLog.Web;
+
     using TestWebApi.Data;
 
     using TestWebAPI.Library;
@@ -25,7 +27,7 @@
             Console.Title = "Test Web API";
 
             // CreateWebHostBuilder(args).Build().MigrateDatabase().Run();
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).UseNLog().Build().Run();
         }
 
         /// <summary>
