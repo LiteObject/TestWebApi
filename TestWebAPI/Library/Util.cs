@@ -91,6 +91,7 @@
             }
             catch (JsonSerializationException ex)
             {
+                Console.WriteLine(ex);
                 result = default(T);
                 return false;
             }

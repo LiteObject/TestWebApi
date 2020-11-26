@@ -16,6 +16,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.OpenApi.Models;
 
@@ -48,7 +49,7 @@
         /// <param name="hostingEnvironment">
         /// The hosting Environment.
         /// </param>
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IWebHostEnvironment hostingEnvironment)
         {
             this.Configuration = configuration;
             this.LoggerFactory = loggerFactory;
@@ -68,7 +69,7 @@
         /// <summary>
         /// Gets or sets the hosting environment.
         /// </summary>
-        public IHostingEnvironment HostingEnvironment { get; set; }
+        public IWebHostEnvironment HostingEnvironment { get; set; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +86,7 @@
         /// <param name="mapper">
         /// The auto mapper object.
         /// </param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
         {
             // Error handling middleware should be the first in the pipeline
             app.UseExceptionHandler(
@@ -131,7 +132,8 @@
                     ResponseWriter = WriteResponse
                 });
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            // app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -153,7 +155,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddLogging(
                 builder =>
@@ -224,7 +226,7 @@
             // http://localhost:5000/swagger
             services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new Info { Title = "Test Web API", Version = "v1" });
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test Web API", Version = "v1" });
                 });
         }
 

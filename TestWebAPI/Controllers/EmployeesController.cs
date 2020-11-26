@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -49,9 +50,9 @@
         /// this mechanism can be used to obtain a small performance gain by bypassing the computation of the hash and the cache lookup, allowing
         /// the application to use an already compiled query through the invocation of a delegate.
         /// </summary>
-        private readonly Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
+        /*private readonly Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
             EF.CompileAsyncQuery((EmployeeDataContext context, string nameLike) =>
-                context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));
+                context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike))); */
 
         /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
 
@@ -270,7 +271,7 @@
             var employee = await this.context.Employees.FindAsync(id);
             var employeeDto = employee.ToDto();
 
-            patch.ApplyTo(employeeDto, this.ModelState);
+            patch.ApplyTo(employeeDto);
 
             this.TryValidateModel(employeeDto);
 
@@ -323,16 +324,12 @@
         {
             string result;
 
-            using (var connection = this.context.Database.GetDbConnection())
-            {
-                connection.Open();
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = "SELECT GETDATE()";
-                    result = (string)await command.ExecuteScalarAsync();
-                }
-            }
-
+            await using DbConnection connection = this.context.Database.GetDbConnection();
+            await connection.OpenAsync();
+            await using var command = connection.CreateCommand();
+            command.CommandText = "SELECT GETDATE()";
+            result = (string)await command.ExecuteScalarAsync();
+            
             return this.Ok(result);
         }
 
@@ -345,7 +342,7 @@
         /// <exception cref="Exception">
         /// </exception>
         [HttpGet("exception")]
-        public async Task<IActionResult> GetException()
+        public IActionResult GetException()
         {
             throw new Exception("Test Exception. Please ignore.");
             return this.Ok();

@@ -23,24 +23,24 @@
     public class RepositoryTests : IDisposable
     {
         /// <summary>
-        /// Flag: Has Dispose already been called?
-        /// </summary>
-        private bool disposed = false;
-
-        /// <summary>
         /// The context.
         /// </summary>
         private readonly EmployeeDataContext context;
 
-        /// <summary>
+        /*// <summary>
         /// The provider.
         /// </summary>
-        private readonly ServiceProvider provider;
+        private readonly ServiceProvider provider; */
 
         /// <summary>
         /// The mapper.
         /// </summary>
         private readonly IMapper mapper;
+
+        /// <summary>
+        /// Flag: Has Dispose already been called?
+        /// </summary>
+        private bool disposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryTests"/> class.
