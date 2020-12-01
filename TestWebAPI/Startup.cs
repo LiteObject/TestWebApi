@@ -133,6 +133,8 @@
                 });
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             // app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -143,6 +145,11 @@
             app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test Web API (V1)");
+                });
+
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
                 });
         }
 
@@ -156,6 +163,8 @@
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddControllers();
 
             services.AddLogging(
                 builder =>

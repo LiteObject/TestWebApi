@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
 
     using Newtonsoft.Json;
 
@@ -15,10 +16,26 @@
     /// <summary>
     /// The values controller.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        private ILogger<UsersController> logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UsersController"/> class.
+        /// </summary>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        public UsersController(ILogger<UsersController> logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>
         /// The get.
         /// </summary>
@@ -52,7 +69,7 @@
                 
                 var result = await client.GetAsync($"api/?results={resultCount}");
 
-                if (result != null && result.IsSuccessStatusCode)
+                if (result.IsSuccessStatusCode)
                 {
                     var response = await result.Content.ReadAsStringAsync();
                     var userApiResponse = JsonConvert.DeserializeObject<UserApiResponse>(response);
