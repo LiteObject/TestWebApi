@@ -52,7 +52,7 @@
         {
             var skills = new List<Skill>
                              {
-                                 new Skill { Id = 1, Name = "C#" }, 
+                                 new Skill { Id = 1, Name = "C#" },
                                  new Skill { Id = 2, Name = "ASP.NET" },
                                  new Skill { Id = 3, Name = ".NET Core" },
                                  new Skill { Id = 4, Name = "SQL" },
@@ -82,15 +82,15 @@
             for (var i = 1; i <= count; i++)
             {
                 employees.Add(new Address()
-                                  {
-                                      Id = i,
-                                      LocationName = $"Location_Name_{i}",
-                                      StreetName = $"Road_{i}",
-                                      StreetNo = $"{i}",
-                                      City = $"City_{i}",
-                                      State = GetRandomState(),
-                                      CreatedBy = "System",
-                                      CreatedOn = DateTime.UtcNow
+                {
+                    Id = i,
+                    LocationName = $"Location_Name_{i}",
+                    StreetName = $"Road_{i}",
+                    StreetNo = $"{i}",
+                    City = $"City_{i}",
+                    State = GetRandomState(),
+                    CreatedBy = "System",
+                    CreatedOn = DateTime.UtcNow
                 });
             }
 

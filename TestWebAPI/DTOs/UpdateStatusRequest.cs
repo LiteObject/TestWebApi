@@ -1,10 +1,9 @@
 ﻿namespace TestWebAPI.DTOs
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
-    using Newtonsoft.Json;
 
     /// <summary>
     /// This DTO is used to update status request.
@@ -35,7 +34,7 @@
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            
+
             if (this.RunDate == default)
             {
                 // yield return new ValidationResult($"Provide a valid value for {nameof(this.RunDate)} field.");

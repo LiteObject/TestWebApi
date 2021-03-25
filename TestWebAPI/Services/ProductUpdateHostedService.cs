@@ -1,16 +1,13 @@
 ﻿namespace TestWebAPI.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using TestWebApi.Data.Contexts;
 
     /// <summary>
@@ -27,7 +24,7 @@
         /// The provider.
         /// </summary>
         private readonly IServiceProvider provider;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductUpdateHostedService"/> class.
         /// </summary>
@@ -79,7 +76,7 @@
             // this.timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
-        
+
         /// <summary>
         /// The dispose.
         /// </summary>

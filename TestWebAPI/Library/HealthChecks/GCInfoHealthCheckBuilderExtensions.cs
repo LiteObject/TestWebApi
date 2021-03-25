@@ -1,12 +1,8 @@
 ﻿namespace TestWebAPI.Library.HealthChecks
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The gc info health check builder extensions.
@@ -54,7 +50,7 @@
                     options =>
                         {
                             options.Threshold = thresholdInBytes.Value;
-                    });
+                        });
             }
 
             return builder;

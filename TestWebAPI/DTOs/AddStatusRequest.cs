@@ -1,10 +1,9 @@
 ﻿namespace TestWebAPI.DTOs
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The add status request.

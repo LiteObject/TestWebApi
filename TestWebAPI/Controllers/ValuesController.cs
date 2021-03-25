@@ -1,13 +1,8 @@
 ﻿namespace TestWebAPI.Controllers
 {
-    using System;
+    using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc;
-
-    using TestWebAPI.DTOs;
-    using TestWebAPI.Library.ActionFilters;
 
     /// <summary>
     /// The values controller.

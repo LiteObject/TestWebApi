@@ -1,14 +1,11 @@
 ﻿namespace TestWebAPI.Library
 {
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
     using System;
-    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
 
     /// <summary>
     /// The database connection check.
@@ -20,7 +17,7 @@
         /// The default test query.
         /// </summary>
         private static readonly string DefaultTestQuery = "SELECT 1";
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseConnectionCheck"/> class.
         /// </summary>

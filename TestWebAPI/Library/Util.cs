@@ -1,10 +1,8 @@
 ﻿namespace TestWebAPI.Library
 {
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
-
-    using Newtonsoft.Json;
-
     using TestWebApi.Domain.Enums;
 
     /// <summary>
@@ -83,10 +81,10 @@
             try
             {
                 var settings = new JsonSerializerSettings
-                                   {
-                                       NullValueHandling = NullValueHandling.Ignore,
-                                       MissingMemberHandling = MissingMemberHandling.Error
-                                   };
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Error
+                };
 
                 result = JsonConvert.DeserializeObject<T>(obj, settings);
                 return true;

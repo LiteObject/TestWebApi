@@ -1,13 +1,11 @@
 ﻿namespace TestWebApi.Data
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Data.Contexts;
 
     /// <summary>

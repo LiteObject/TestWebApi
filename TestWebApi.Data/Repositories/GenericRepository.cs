@@ -1,18 +1,14 @@
 ﻿namespace TestWebApi.Data.Repositories
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using DelegateDecompiler.EntityFramework;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-
-    using AutoMapper;
-    using AutoMapper.QueryableExtensions;
-
-    using DelegateDecompiler.EntityFramework;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Domain.Entities;
     using TestWebApi.Domain.Specifications;
 
@@ -152,7 +148,7 @@
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         /// <summary>
         /// Protected implementation of Dispose pattern
         /// </summary>

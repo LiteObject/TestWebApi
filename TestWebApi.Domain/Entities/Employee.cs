@@ -47,7 +47,7 @@
         /// Gets or sets the user account control.
         /// </summary>
         public int UserAccountControl { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the skills.
         /// </summary>

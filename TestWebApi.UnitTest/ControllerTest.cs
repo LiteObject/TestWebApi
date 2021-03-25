@@ -1,29 +1,22 @@
 ﻿namespace TestWebApi.UnitTest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
-
     using AutoMapper;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-
     using Moq;
-
-    using TestWebAPI;
-    using TestWebAPI.Controllers;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
     using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-
+    using TestWebAPI;
+    using TestWebAPI.Controllers;
     using TestWebAPI.DTOs;
-
     using Xunit;
-
     using Employee = TestWebApi.Domain.Entities.Employee;
     using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
 
@@ -158,10 +151,10 @@
             var validationResults = new List<ValidationResult>();
 
             var request = new AddStatusRequest()
-                              {
-                                  RunDate = DateTime.Now,
-                                  Statuses = new List<string>() { }
-                              };
+            {
+                RunDate = DateTime.Now,
+                Statuses = new List<string>() { }
+            };
 
             // ACT
             ActionResult result = controller.AddStatus(request);

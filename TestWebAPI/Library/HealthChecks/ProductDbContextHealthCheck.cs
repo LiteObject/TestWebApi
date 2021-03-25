@@ -1,11 +1,8 @@
 ﻿namespace TestWebAPI.Library.HealthChecks
 {
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-
     using TestWebApi.Data.Contexts;
 
     /// <summary>
@@ -44,7 +41,7 @@
         /// </returns>
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
-            return await this.dbContext.Database.CanConnectAsync(cancellationToken) 
+            return await this.dbContext.Database.CanConnectAsync(cancellationToken)
                        ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy();
         }
     }

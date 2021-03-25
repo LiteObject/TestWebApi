@@ -1,15 +1,12 @@
 ﻿namespace TestWebAPI.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc;
-
-    using Newtonsoft.Json;
-
     using TestWebAPI.DTOs;
 
     /// <summary>
@@ -40,16 +37,16 @@
 
             // https://randomuser.me/api/?results=10
             using (var client = new HttpClient()
-                                    {
-                                        BaseAddress = new Uri("https://randomuser.me"),
-                                        Timeout = TimeSpan.FromMinutes(10)
-                                    })
+            {
+                BaseAddress = new Uri("https://randomuser.me"),
+                Timeout = TimeSpan.FromMinutes(10)
+            })
             {
                 // client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Token}");
                 // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                
+
                 var result = await client.GetAsync($"api/?results={resultCount}");
 
                 if (result != null && result.IsSuccessStatusCode)
@@ -62,7 +59,7 @@
 
             return this.Ok(users);
         }
-        
+
         /// <summary>
         /// The post.
         /// </summary>

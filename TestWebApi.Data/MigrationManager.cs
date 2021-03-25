@@ -1,11 +1,9 @@
 ﻿namespace TestWebApi.Data
 {
-    using System;
-
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-
+    using System;
     using TestWebApi.Data.Contexts;
 
     /// <summary>

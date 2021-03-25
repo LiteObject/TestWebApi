@@ -1,5 +1,6 @@
 ﻿namespace TestWebAPI.LoadTest
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -7,12 +8,7 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Net.Mime;
-    using System.Runtime.CompilerServices;
     using System.Threading;
-    using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Data.Contexts;
     using TestWebApi.Domain.Entities;
 
@@ -62,7 +58,7 @@
 
             using (var db = new ProductDbContext())
             {
-                List<Product> p  = db.Products.FromSqlRaw($"EXEC dbo.SpUpdateAllProducts {"1,2,3"}, TestWebApiLoad").ToList();
+                List<Product> p = db.Products.FromSqlRaw($"EXEC dbo.SpUpdateAllProducts {"1,2,3"}, TestWebApiLoad").ToList();
                 Console.WriteLine($"Count: {p.Count()}");
             }
 

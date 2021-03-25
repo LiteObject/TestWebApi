@@ -1,12 +1,9 @@
 ﻿namespace TestWebAPI.Services
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The background task queue.
@@ -32,6 +29,6 @@
         /// The <see cref="Task"/>.
         /// </returns>
         Task<Func<CancellationToken, DbContext, Task>> DequeueWorkItemAsync(
-            CancellationToken cancellationToken);      
+            CancellationToken cancellationToken);
     }
 }

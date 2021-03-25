@@ -1,16 +1,6 @@
 ﻿namespace TestWebAPI
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Net.Mime;
-    using System.Net.NetworkInformation;
-    using System.Threading.Tasks;
-
-    using AutoMapper;
-
-    using HealthChecks.UI.Client;
-
+    using AutoMapper;    
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -18,7 +8,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Internal;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -26,27 +15,22 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Microsoft.OpenApi.Models;
-
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-
-    using Swashbuckle.AspNetCore.Swagger;
-
-    using TestWebApi.Data;
+    using System;
+    using System.Linq;
+    using System.Net.Mime;
+    using System.Threading.Tasks;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-
     using TestWebApi.Domain.Entities;
-
     using TestWebAPI.DTOs;
     using TestWebAPI.EventHandlers;
     using TestWebAPI.Library;
     using TestWebAPI.Library.ActionFilters;
     using TestWebAPI.Library.HealthChecks;
     using TestWebAPI.Services;
-
     using Employee = TestWebApi.Domain.Entities.Employee;
-    using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
     /// <summary>
     /// The startup.
@@ -130,8 +114,8 @@
 
             // services.AddScoped<CustomerIoEventBackgroundWork.Worker>();
 
-            var connectionString =
-                "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true";
+            // "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true"
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             // var optionsBuilder = new DbContextOptionsBuilder<EmployeeDataContext>();
             /*services.AddDbContext<EmployeeDataContext>(optionsBuilder =>
@@ -196,7 +180,7 @@
                     var config = new Configuration();
 
                     StringValues? i = provider.GetService<IHttpContextAccessor>()?.HttpContext?.Request?.Headers["id"];
-                    
+
                     if (i.HasValue && i.Value.Count > 1 && int.TryParse(i.Value.Single(), out int id))
                     {
                         config.Id = id;
@@ -290,7 +274,7 @@
                 {
                     Predicate = (check) => check.Tags.Contains("status"),
                     AllowCachingResponses = false,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    // ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
 
             // For custom message
@@ -309,7 +293,7 @@
                 {
                     Predicate = (check) => check.Tags.Contains("database") || check.Tags.Contains("sql") || check.Tags.Contains("dbcontext") || check.Tags.Contains("memory"),
                     AllowCachingResponses = false,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    // ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
 
             // app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");

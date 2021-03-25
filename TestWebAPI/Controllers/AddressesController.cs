@@ -1,11 +1,8 @@
 ﻿namespace TestWebAPI.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Internal;
-
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
 

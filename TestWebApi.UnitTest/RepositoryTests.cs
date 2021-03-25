@@ -1,20 +1,16 @@
 ﻿namespace TestWebApi.UnitTest
 {
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using AutoMapper;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
     using TestWebApi.Domain.Specifications;
-
     using Xunit;
 
     /// <summary>

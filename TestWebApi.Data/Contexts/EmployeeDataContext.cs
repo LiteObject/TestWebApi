@@ -1,12 +1,10 @@
 ﻿namespace TestWebApi.Data.Contexts
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-
     using TestWebApi.Data.Configuration;
     using TestWebApi.Domain.Entities;
 

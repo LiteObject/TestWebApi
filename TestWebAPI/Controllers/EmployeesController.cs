@@ -1,23 +1,17 @@
 ﻿namespace TestWebAPI.Controllers
 {
+    using Microsoft.AspNetCore.JsonPatch;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.JsonPatch;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Logging;
-
-    using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-
     using TestWebAPI.DTOs;
     using TestWebAPI.Library;
-
     using Employee = TestWebApi.Domain.Entities.Employee;
 
     /// <summary>
@@ -138,7 +132,7 @@
             }
 
             employees = await this.employeeRepository.FindAsync<DTOs.Employee>(predicate);
-            
+
             if (employees is null || !employees.Any())
             {
                 return this.NotFound(employees);
@@ -348,7 +342,7 @@
         public IActionResult GetException()
         {
             // return this.Ok();
-            throw new Exception("Test Exception. Please ignore.");           
+            throw new Exception("Test Exception. Please ignore.");
         }
 
         /// <summary>

@@ -1,8 +1,6 @@
 ﻿namespace TestWebApi.Data.Contexts
 {
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Console;
 
     using TestWebApi.Domain.Entities;
 
