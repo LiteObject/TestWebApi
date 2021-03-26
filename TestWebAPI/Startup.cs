@@ -248,9 +248,21 @@
                                 });
                     });
 
+            app.UseEndpoints(endpoints => 
+            {
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapGet("/debug-config", ctx =>
+                    {
+                        var config = (Configuration as IConfigurationRoot).GetDebugView();
+                        return ctx.Response.WriteAsync(config);
+                    });
+                }
+            });
+
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();               
             }
             else
             {
