@@ -37,7 +37,7 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(int pageSize, int pageNumber);
 
         /// <summary>
         /// The find async.
@@ -45,10 +45,12 @@
         /// <param name="predicate">
         /// The predicate.
         /// </param>
+        /// <param name="pageNumber">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, int pageNumber = 1, int pageSize = 10);
 
         /// <summary>
         /// The find async.

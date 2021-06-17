@@ -66,9 +66,12 @@
         }
 
         /// <inheritdoc />
-        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber = 1, int pageSize = 10)
         {
-            return await this.DbSet.Where(predicate).AsNoTracking().ToListAsync();
+            return await this.DbSet.Where(predicate)
+                .AsNoTracking()
+                .Skip(pageSize * (pageNumber - 1)).Take(pageSize)
+                .ToListAsync();
         }
 
         /// <inheritdoc />
@@ -111,9 +114,10 @@
         }
 
         /// <inheritdoc />
-        public virtual async Task<List<TEntity>> GetAllAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync(int pageSize, int pageNumber)
         {
-            return await this.DbSet.AsNoTracking().ToListAsync();
+            // TODO: Check to make sure page size or number is not zero
+            return await this.DbSet.AsNoTracking().Skip(pageSize * pageNumber).Take(pageSize).ToListAsync();
         }
 
         /// <inheritdoc />

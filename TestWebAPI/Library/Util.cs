@@ -74,7 +74,7 @@
         {
             if (obj is null)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
 

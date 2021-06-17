@@ -49,7 +49,7 @@
 
             if (string.IsNullOrWhiteSpace(searchKey))
             {
-                addresses = await this.employeeRepository.GetAllAsync();
+                addresses = await this.employeeRepository.GetAllAsync(10, 1);
             }
             else
             {

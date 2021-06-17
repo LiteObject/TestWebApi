@@ -1,22 +1,23 @@
-﻿namespace TestWebAPI.Controllers
+﻿using Newtonsoft.Json;
+
+namespace TestWebAPI.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-
-    using Newtonsoft.Json;
-
+    
     using TestWebAPI.DTOs;
 
     /// <summary>
     /// The values controller.
     /// </summary>
-    [Route("api/users")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -114,6 +115,54 @@
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet("diag")]
+        public IActionResult CallGC([FromQuery] bool runGc = false)
+        {
+            var beforeGcTotal = GC.GetTotalMemory(false);
+
+            var p = Process.GetCurrentProcess();
+
+            var beforeGcWorkingSet64 = p.WorkingSet64;
+            var beforeGcPrivate = p.PrivateMemorySize64;
+
+            if (runGc)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                var afterGcTotal = GC.GetTotalMemory(true);
+
+                var afterGcWorkingSet64 = p.WorkingSet64;
+                var afterGcPrivate = p.PrivateMemorySize64;
+
+                var diagnostics = new
+                                      {
+                                          BeforeGcTotal = beforeGcTotal,
+                                          AfterGcTotal = afterGcTotal,
+                                          DifferenceTotal = beforeGcTotal - afterGcTotal,
+                                          BeforeGcWorkingSet64 = beforeGcTotal,
+                                          BeforeGcPrivate = beforeGcPrivate,
+                                          AfterGcWorkingSet64 = afterGcWorkingSet64,
+                                          AfterGcPrivate = afterGcPrivate
+                                      };
+
+                return this.Ok(diagnostics);
+
+            }
+            else
+            {
+                var diagnostics = new
+                                      {
+                                          TotalMemory = beforeGcTotal / 1000000,
+                                          WorkingSet64 = beforeGcWorkingSet64 / 1000000,
+                                          Private = beforeGcPrivate / 1000000
+                                      };
+
+                return this.Ok(diagnostics);
+            }
         }
     }
 }
