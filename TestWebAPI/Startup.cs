@@ -1,6 +1,6 @@
 ﻿namespace TestWebAPI
 {
-    using AutoMapper;    
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -202,7 +202,8 @@
                 .AddCheck("pingCheck", new PingHealthCheck("www.google.com", 100), tags: new[] { "ping", "network", "connection" });
 
             // Registers required services for health checks
-            services.AddHealthChecksUI();
+            services.AddHealthChecksUI()
+                .AddSqlServerStorage(connectionString);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             // http://localhost:5000/swagger
@@ -248,18 +249,6 @@
                                 });
                     });
 
-            app.UseEndpoints(endpoints => 
-            {
-                if (env.IsDevelopment())
-                {
-                    endpoints.MapGet("/debug-config", ctx =>
-                    {
-                        var config = (Configuration as IConfigurationRoot).GetDebugView();
-                        return ctx.Response.WriteAsync(config);
-                    });
-                }
-            });
-
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();               
@@ -276,8 +265,6 @@
                 var context = serviceScope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
                 context.Database.Migrate();
             } */
-
-            app.UseHealthChecksUI(config => config.UIPath = "/healthCheckUi");
 
             // For default message
             app.UseHealthChecks(
@@ -309,10 +296,11 @@
                 });
 
             // app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
+            app.UseHealthChecksUI(config => config.UIPath = "/healthCheckUi");
 
             app.UseHttpsRedirection();
 
-            // app.UseMvc();
+            app.UseRouting();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -323,6 +311,18 @@
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{this.ApplicationName} (V1)");
                 });
+
+            app.UseEndpoints(endpoints =>
+            {
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapGet("/debug-config", ctx =>
+                    {
+                        var config = (Configuration as IConfigurationRoot).GetDebugView();
+                        return ctx.Response.WriteAsync(config);
+                    });
+                }
+            });
         }
 
         /// <summary>
