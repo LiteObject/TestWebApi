@@ -1,7 +1,9 @@
 ﻿namespace TestWebAPI.Library
 {
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
+    using TestWebApi.Domain.Enums;
 
     /// <summary>
     /// The utility class. Test.
