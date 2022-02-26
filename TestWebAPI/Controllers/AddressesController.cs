@@ -1,12 +1,9 @@
 ﻿namespace TestWebAPI.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Internal;
-
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
 
@@ -54,17 +51,17 @@
             else
             {
                 addresses = await this.employeeRepository.FindAsync(
-                               a => a.LocationName.Contains(searchKey) 
+                               a => a.LocationName.Contains(searchKey)
                                     || a.City.Contains(searchKey)
                                     || a.StreetName.Contains(searchKey));
             }
 
-            if (addresses != null && addresses.Any())
+            if (addresses == null || addresses.Count == 0)
             {
-                return this.Ok(addresses);
+                return this.NotFound();
             }
 
-            return this.NotFound();
+            return this.Ok(addresses);
         }
 
         /// <summary>
@@ -79,7 +76,7 @@
         [HttpGet("{id}")]
         public async Task<ActionResult<Address>> Get(int id)
         {
-            var address = await this.employeeRepository.GetAsync(id);
+            Address address = await this.employeeRepository.GetAsync(id);
 
             if (address is null)
             {

@@ -1,18 +1,14 @@
 ﻿namespace TestWebApi.Data.Repositories
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using DelegateDecompiler.EntityFramework;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-
-    using AutoMapper;
-    using AutoMapper.QueryableExtensions;
-
-    using DelegateDecompiler.EntityFramework;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Domain.Entities;
     using TestWebApi.Domain.Specifications;
 
@@ -76,8 +72,8 @@
             Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
-            var results = await query.Where(predicate).ToListAsync();
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
+            List<TEntity> results = await query.Where(predicate).ToListAsync();
             return results;
         }
 
@@ -86,7 +82,7 @@
             Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
             return await query.Where(predicate).ProjectTo<T1>(this.mapper.ConfigurationProvider).DecompileAsync().ToListAsync();
         }
 
@@ -105,7 +101,7 @@
         /// <inheritdoc />
         public virtual List<TEntity> Find(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
             var results = query.Where(predicate).AsNoTracking().ToList();
             return results;
         }
@@ -152,7 +148,7 @@
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         /// <summary>
         /// Protected implementation of Dispose pattern
         /// </summary>
@@ -183,7 +179,7 @@
         /// </returns>
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var queryable = this.DbSet.AsNoTracking();
+            IQueryable<TEntity> queryable = this.DbSet.AsNoTracking();
             return includeProperties.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
     }

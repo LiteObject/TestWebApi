@@ -1,11 +1,9 @@
 ﻿namespace TestWebApi.Data
 {
-    using System;
-
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-
+    using System;
     using TestWebApi.Data.Contexts;
 
     /// <summary>
@@ -24,20 +22,18 @@
         /// </returns>
         public static IWebHost MigrateDatabase(this IWebHost webHost)
         {
-            using (var scope = webHost.Services.CreateScope())
+            using (IServiceScope scope = webHost.Services.CreateScope())
             {
-                using (var context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
+                using EmployeeDataContext context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
+                try
                 {
-                    try
-                    {
-                        // context.Database.EnsureDeleted();
-                        context.Database.Migrate();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        throw;
-                    }
+                    // context.Database.EnsureDeleted();
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
                 }
             }
 

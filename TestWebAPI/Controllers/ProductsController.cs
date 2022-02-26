@@ -1,21 +1,17 @@
 ﻿namespace TestWebAPI.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.JsonPatch;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Logging;
-
-    using TestWebApi.Data;
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
-
-    using TestWebAPI.Library;
+    using TestWebAPI.Services;
 
     /// <summary>
     /// The Products controller.
@@ -29,25 +25,62 @@
         /// The logger.
         /// </summary>
         private readonly ILogger logger;
-        
+
         /// <summary>
         /// The Product repository.
         /// </summary>
         private readonly IRepository<Product> productRepository;
-        
+
+        /// <summary>
+        /// The product db context.
+        /// </summary>
+        private readonly ProductDbContext productDbContext;
+
+        /// <summary>
+        /// The product update hosted service.
+        /// </summary>
+        private readonly ProductUpdateHostedService productUpdateHostedService;
+
+        private readonly IServiceProvider services;
+
+        /// <summary>
+        /// The task queue.
+        /// </summary>
+        private readonly ITaskQueue taskQueue;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductsController"/> class.
         /// </summary>
         /// <param name="logger">
         /// The logger.
         /// </param>
+        /// <param name="hostedService">
+        /// The hosted Service.
+        /// </param>
         /// <param name="repository">
         /// The repository.
         /// </param>
-        public ProductsController(ILogger<ProductsController> logger, IRepository<Product> repository)
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        /// <param name="queue">
+        /// The queue.
+        /// </param>
+        /// <param name="services"></param>
+        public ProductsController(
+                ILogger<ProductsController> logger,
+                IHostedService hostedService,
+                IRepository<Product> repository,
+                ProductDbContext context,
+                ITaskQueue queue,
+                IServiceProvider services)
         {
-            this.productRepository = repository;
-            this.logger = logger;
+            this.productRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.productDbContext = context ?? throw new ArgumentNullException(nameof(context));
+            this.taskQueue = queue ?? throw new ArgumentNullException(nameof(queue));
+            this.services = services ?? throw new ArgumentNullException(nameof(services));
+            this.productUpdateHostedService = hostedService as ProductUpdateHostedService;
 
             this.logger.LogTrace($"{nameof(ProductsController)} class has been instantiated.");
         }
@@ -64,7 +97,7 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct([FromRoute] int id)
         {
-            var product = await this.productRepository.GetAsync(id);
+            Product product = await this.productRepository.GetAsync(id).ConfigureAwait(false);
 
             if (product == null)
             {
@@ -86,9 +119,9 @@
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] string nameLike = default)
         {
-            var products = string.IsNullOrWhiteSpace(nameLike)
-                               ? await this.productRepository.GetAllAsync()
-                               : await this.productRepository.FindAsync(e => e.Name.Contains(nameLike));
+            List<Product> products = string.IsNullOrWhiteSpace(nameLike)
+                               ? await this.productRepository.GetAllAsync().ConfigureAwait(false)
+                               : await this.productRepository.FindAsync(e => e.Name.Contains(nameLike)).ConfigureAwait(false);
 
             if (!products.Any())
             {
@@ -115,10 +148,48 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            await this.productRepository.Add(product);
-            await this.productRepository.SaveChangesAsync();
+            await this.productRepository.Add(product).ConfigureAwait(false);
+            await this.productRepository.SaveChangesAsync().ConfigureAwait(false);
 
             return this.CreatedAtAction("GetProduct", new { id = product.Id }, product);
+        }
+
+        /// <summary>
+        /// The update all products.
+        /// </summary>
+        /// <param name="updatedBy">
+        /// The updated by.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
+        [HttpPut("bulk")]
+        public IActionResult UpdateAllProducts(string updatedBy)
+        {
+            if (string.IsNullOrWhiteSpace(updatedBy))
+            {
+                updatedBy = "TestWebApi";
+            }
+
+            // this.productUpdateHostedService.StartAsync(new System.Threading.CancellationToken());
+            this.taskQueue.AddWorkItem(async (token, context) =>
+                {
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(5), token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Prevent throwing if the Delay is cancelled
+                    }
+
+                    this.logger.LogInformation("About to execute the stored proc...");
+
+                    _ = await ((context as ProductDbContext)?.Products.FromSqlRaw(
+                                   $"EXEC dbo.SpUpdateAllProducts 1,2,3, {updatedBy}") ?? throw new InvalidOperationException()).ToListAsync();
+                });
+
+            return this.Accepted();
         }
     }
 }

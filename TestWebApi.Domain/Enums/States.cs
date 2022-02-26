@@ -1,9 +1,6 @@
 ﻿namespace TestWebApi.Domain.Enums
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Text;
 
     /// <summary>
     /// States abbreviations.

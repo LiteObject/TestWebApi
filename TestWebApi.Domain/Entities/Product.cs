@@ -1,9 +1,5 @@
 ﻿namespace TestWebApi.Domain.Entities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// The product.
     /// </summary>

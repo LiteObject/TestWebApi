@@ -1,26 +1,24 @@
 ﻿namespace TestWebApi.UnitTest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     using AutoMapper;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-
     using Moq;
-
-    using TestWebAPI;
-    using TestWebAPI.Controllers;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
     using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-    using TestWebApi.Domain.Entities;
-
+    using TestWebAPI;
+    using TestWebAPI.Controllers;
+    using TestWebAPI.DTOs;
     using Xunit;
+    using Employee = TestWebApi.Domain.Entities.Employee;
+    using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
 
     /// <summary>
     /// The controller test.
@@ -79,15 +77,15 @@
             // ARRANGE
             var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, this.mapper);
             var controller = new EmployeesController(new Mock<ILogger<EmployeesController>>().Object, repo, this.context);
-            
+
             // ACT
-            var result = await controller.GetEmployees(null);
+            IActionResult result = await controller.GetEmployees(null);
 
             // ASSERT
-            var viewResult = Assert.IsType<OkObjectResult>(result);
+            OkObjectResult viewResult = Assert.IsType<OkObjectResult>(result);
             Assert.IsAssignableFrom<IActionResult>(viewResult);
 
-            var model = Assert.IsAssignableFrom<List<Employee>>(viewResult.Value);
+            List<Employee> model = Assert.IsAssignableFrom<List<Employee>>(viewResult.Value);
             Assert.NotEmpty(model);
         }
 
@@ -103,17 +101,69 @@
             // ARRANGE
             var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, this.mapper);
             var controller = new EmployeesController(new Mock<ILogger<EmployeesController>>().Object, repo, this.context);
-            var employee = await this.context.Employees.FirstOrDefaultAsync();
+            Employee employee = await this.context.Employees.FirstOrDefaultAsync();
 
             // ACT
-            var result = await controller.GetEmployee(employee.Id);
+            IActionResult result = await controller.GetEmployee(employee.Id);
 
             // ASSERT
-            var viewResult = Assert.IsType<OkObjectResult>(result);
+            OkObjectResult viewResult = Assert.IsType<OkObjectResult>(result);
             Assert.IsAssignableFrom<IActionResult>(viewResult);
 
-            var model = Assert.IsAssignableFrom<Employee>(viewResult.Value);
+            Employee model = Assert.IsAssignableFrom<Employee>(viewResult.Value);
             Assert.Equal(employee.Id, model.Id);
+        }
+
+        /// <summary>
+        /// The test update loan status.
+        /// </summary>
+        [Fact]
+        public void TestUpdateLoanStatus()
+        {
+            // ARRANGE
+            LoansController controller = new LoansController();
+            var validationResults = new List<ValidationResult>();
+
+            var request = new UpdateStatusRequest()
+            {
+                RunDate = DateTime.Now,
+                Statuses = new List<string>() { "status 1", "status 2" }
+            };
+
+            // ACT
+            ActionResult result = controller.UpdateStatus(request);
+            var valid = Validator.TryValidateObject(request, new ValidationContext(request, null, null), validationResults);
+
+            // ASSERT
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<ActionResult>(result);
+            Assert.True(valid);
+        }
+
+        /// <summary>
+        /// The test add loan status.
+        /// </summary>
+        [Fact]
+        public void TestAddLoanStatus()
+        {
+            // ARRANGE
+            LoansController controller = new LoansController();
+            var validationResults = new List<ValidationResult>();
+
+            var request = new AddStatusRequest()
+            {
+                RunDate = DateTime.Now,
+                Statuses = new List<string>() { }
+            };
+
+            // ACT
+            ActionResult result = controller.AddStatus(request);
+            var valid = Validator.TryValidateObject(request, new ValidationContext(request, null, null), validationResults);
+
+            // ASSERT
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<ActionResult>(result);
+            Assert.True(valid);
         }
     }
 }

@@ -1,13 +1,11 @@
 namespace TestWebApi.IntegrationTest
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.TestHost;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.TestHost;
     using TestWebAPI;
-
     using Xunit;
 
     /// <summary>
@@ -49,7 +47,7 @@ namespace TestWebApi.IntegrationTest
             var request = new HttpRequestMessage(new HttpMethod(method), "/api/values");
 
             // ACT
-            var response = await this.client.SendAsync(request);
+            HttpResponseMessage response = await this.client.SendAsync(request);
 
             // ASSERT
             response.EnsureSuccessStatusCode();

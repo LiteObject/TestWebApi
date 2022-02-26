@@ -1,13 +1,11 @@
 ﻿namespace TestWebAPI.EventHandlers
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-    
     /// <summary>
     /// The employee event handler.
     /// </summary>
@@ -23,10 +21,10 @@
         {
             var modifiedEntities = entries.Where(e => e.State == EntityState.Modified).ToList();
 
-            foreach (var entry in modifiedEntities)
+            foreach (EntityEntry entry in modifiedEntities)
             {
                 // var entity = entry.Entity;
-                foreach (var originalValuesProperty in entry.OriginalValues.Properties)
+                foreach (Microsoft.EntityFrameworkCore.Metadata.IProperty originalValuesProperty in entry.OriginalValues.Properties)
                 {
                     var originalValue = entry.OriginalValues[originalValuesProperty].ToString();
                     var currentValue = entry.CurrentValues[originalValuesProperty].ToString();

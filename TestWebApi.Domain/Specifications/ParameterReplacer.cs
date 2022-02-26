@@ -11,7 +11,7 @@
         /// The parameter.
         /// </summary>
         private readonly ParameterExpression parameter;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterReplacer"/> class.
         /// </summary>

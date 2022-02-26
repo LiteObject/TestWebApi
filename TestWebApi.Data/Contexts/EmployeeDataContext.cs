@@ -1,12 +1,10 @@
 ﻿namespace TestWebApi.Data.Contexts
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-
     using TestWebApi.Data.Configuration;
     using TestWebApi.Domain.Entities;
 
@@ -52,11 +50,10 @@
         public DbSet<Employee> Employees { get; set; }
 
         /// <inheritdoc />
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             this.OnSaveEventHandlers?.Invoke(this.ChangeTracker.Entries());
-
-            return await base.SaveChangesAsync(cancellationToken);
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>

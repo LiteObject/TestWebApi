@@ -1,9 +1,7 @@
 ﻿namespace TestWebApi.Domain.Specifications
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq.Expressions;
-    using System.Text;
 
     /// <summary>
     /// The or specification.
@@ -48,8 +46,8 @@
         {
             var leftExpression = this.left.ToExpression();
             var rightExpression = this.right.ToExpression();
-            var paramExpr = Expression.Parameter(typeof(T));
-            var exprBody = Expression.OrElse(leftExpression.Body, rightExpression.Body);
+            ParameterExpression paramExpr = Expression.Parameter(typeof(T));
+            BinaryExpression exprBody = Expression.OrElse(leftExpression.Body, rightExpression.Body);
             exprBody = (BinaryExpression)new ParameterReplacer(paramExpr).Visit(exprBody);
             var finalExpr = Expression.Lambda<Func<T, bool>>(exprBody ?? throw new InvalidOperationException($"{nameof(exprBody)} cannot be null."), paramExpr);
 

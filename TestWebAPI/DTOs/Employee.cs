@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using TestWebApi.Domain.Entities;
-    
+
     /// <summary>
     /// The value.
     /// </summary>

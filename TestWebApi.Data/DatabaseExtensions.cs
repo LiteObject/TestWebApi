@@ -1,13 +1,11 @@
 ﻿namespace TestWebApi.Data
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore;
-
     using TestWebApi.Data.Contexts;
 
     /// <summary>
@@ -29,14 +27,12 @@
         /// </returns>
         public static async Task<object> RawSqlQuery(this DbContext context, string sqlCommandText)
         {
-            using (var command = context.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sqlCommandText;
-                command.CommandType = CommandType.Text;
+            using DbCommand command = context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sqlCommandText;
+            command.CommandType = CommandType.Text;
 
-                await context.Database.OpenConnectionAsync();
-                return await command.ExecuteScalarAsync();
-            }
+            await context.Database.OpenConnectionAsync();
+            return await command.ExecuteScalarAsync();
         }
 
         /// <summary>
@@ -56,28 +52,22 @@
         /// </returns>
         public static List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
         {
-            using (var context = new EmployeeDataContext())
+            using var context = new EmployeeDataContext();
+            using DbCommand command = context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = query;
+            command.CommandType = CommandType.Text;
+
+            context.Database.OpenConnection();
+
+            using DbDataReader result = command.ExecuteReader();
+            var entities = new List<T>();
+
+            while (result.Read())
             {
-                using (var command = context.Database.GetDbConnection().CreateCommand())
-                {
-                    command.CommandText = query;
-                    command.CommandType = CommandType.Text;
-
-                    context.Database.OpenConnection();
-
-                    using (var result = command.ExecuteReader())
-                    {
-                        var entities = new List<T>();
-
-                        while (result.Read())
-                        {
-                            entities.Add(map(result));
-                        }
-
-                        return entities;
-                    }
-                }
+                entities.Add(map(result));
             }
+
+            return entities;
         }
     }
 }
